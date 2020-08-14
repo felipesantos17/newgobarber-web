@@ -21,8 +21,12 @@ const SignUp: React.FC = () => {
       <Content>
         <img src={logoImg} alt="GoBarber" />
 
-        {/* passando o parametro initialData vc consegue enviar um valor padrão, exemplo */}
-        <Form initialData={{ name: 'Felipe' }} onSubmit={handleSubmit}>
+        {/* passando o parametro initialData vc consegue enviar um valor padrão,
+         exemplo
+         initialData={{ name: 'Felipe' }}
+         Dentro do "Form"
+         */}
+        <Form onSubmit={handleSubmit}>
           <h1>Faça seu cadastro</h1>
 
           <Input name="name" icon={FiUser} placeholder="Nome" />
