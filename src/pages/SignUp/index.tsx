@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoImg from '../../assets/logo.svg';
 
@@ -10,9 +13,33 @@ import Button from '../../components/Button';
 import { Container, Content, Background } from './styles';
 
 const SignUp: React.FC = () => {
-  function handleSubmit(data: any): void {
-    console.log(data);
-  }
+  const formRef = useRef<FormHandles>(null);
+
+  /* Tipo mais seguro ao invés de "object" - o ESLint remocenda usar o
+  "Record<string, unknown>"" */
+  const handleSubmit = useCallback(async (data: Record<string, unknown>) => {
+    try {
+      formRef.current?.setErrors({});
+
+      /* Geralmente quando for validar várioas informações ao mesmo tempo
+      é bom criar um "schema" de validação */
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string()
+          .required('E-mail obrigatório')
+          .email('Digite um e-mail válido'),
+        password: Yup.string().min(6, 'No mínimo 6 dígitos'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      const errors = getValidationErrors(err);
+
+      formRef.current?.setErrors(errors);
+    }
+  }, []);
 
   return (
     <Container>
@@ -26,7 +53,7 @@ const SignUp: React.FC = () => {
          initialData={{ name: 'Felipe' }}
          Dentro do "Form"
          */}
-        <Form onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <h1>Faça seu cadastro</h1>
 
           <Input name="name" icon={FiUser} placeholder="Nome" />
