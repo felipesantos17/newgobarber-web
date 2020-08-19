@@ -6,9 +6,10 @@ import React, {
   useCallback,
 } from 'react';
 import { IconBaseProps } from 'react-icons';
+import { FiAlertCircle } from 'react-icons/fi';
 import { useField } from '@unform/core';
 
-import { Container } from './styles';
+import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -32,7 +33,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
     setIsFocused(false);
     /* Colocando 2 esclamações na frente ele transforma em Boolean */
     setIsFilled(!!inputRef.current?.value);
-  }, []); /* Só é chamada de novo se os valores dentro do Array mudar
+  }, []); /* Só é chamada essa função de novo se os valores dentro do Array mudar
     - no caso ele esta vazio  */
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isFilled={isFilled} isFocused={isFocused}>
+    <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
       {Icon && <Icon size={20} />}
       {/* passando o paramtro defaultValue do React, vc consegue enviar
        para o campo um valor padrão */}
@@ -56,7 +57,11 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
         {...rest}
       />
 
-      {error}
+      {error && (
+        <Error title={error}>
+          <FiAlertCircle color="#c53030" size={20} />
+        </Error>
+      )}
     </Container>
   );
 };

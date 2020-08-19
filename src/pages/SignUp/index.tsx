@@ -16,7 +16,7 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   /* Tipo mais seguro ao invés de "object" - o ESLint remocenda usar o
-  "Record<string, unknown>"" */
+  "Record<string, unknown> */
   const handleSubmit = useCallback(async (data: Record<string, unknown>) => {
     try {
       formRef.current?.setErrors({});
